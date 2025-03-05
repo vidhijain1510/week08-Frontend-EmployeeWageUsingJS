@@ -1,10 +1,33 @@
 class EmployeeWage {
-    constructor(name, totalDays = 20) {
-        this.name = name;
-        this.wagePerHour = 20;
-        this.totalDays = totalDays;
-        this.dailyWages = [];
-        this.generateWages();
+    constructor(id, name, salary, gender, startDate, totalDays = 20) {
+        try {
+            // Validate Employee ID (non-zero positive number)
+            if (!/^[1-9]\d*$/.test(id)) throw new Error("Invalid Employee ID! Must be a positive number.");
+
+            // Validate Salary (non-zero positive number)
+            if (!/^[1-9]\d*$/.test(salary)) throw new Error("Invalid Salary! Must be a positive number.");
+
+            // Validate Gender (M or F)
+            if (!/^[MF]$/.test(gender)) throw new Error("Invalid Gender! Must be 'M' or 'F'.");
+
+            // Validate Start Date (Should not be in the future)
+            let today = new Date();
+            let empDate = new Date(startDate);
+            if (empDate > today) throw new Error("Invalid Start Date! Cannot be a future date.");
+
+            // Assign values if all validations pass
+            this.id = id;
+            this.name = name;
+            this.salary = salary;
+            this.gender = gender;
+            this.startDate = empDate;
+            this.wagePerHour = 20;
+            this.totalDays = totalDays;
+            this.dailyWages = [];
+            this.generateWages();
+        } catch (error) {
+            console.error(`Error: ${error.message}`);
+        }
     }
 
     // Function to determine work hours
@@ -22,34 +45,14 @@ class EmployeeWage {
         }
     };
 
-    // a. Calculate Total Wage using reduce
-    getTotalWage = () => 
-        this.dailyWages.reduce((total, day) => total + day.wage, 0);
-
-    // b. Show the Day along with Daily Wage using map
-    getDailyWages = () => 
-    this.dailyWages.map(({ day, wage }) => `Day ${day}: $${wage}`);
-
-
-    // c. Show Days when Full time wage (160) was earned
-    getFullTimeDays = () => 
-        this.dailyWages.filter(({ wage }) => wage === 160).map(({ day }) => day);
-
-    // d. Find first occurrence of Full Time Wage (160)
-    getFirstFullTimeDay = () => 
-        this.dailyWages.find(({ wage }) => wage === 160)?.day || "None";
-
-    // e. Check if every full-time wage entry is truly full-time
-    isEveryFullTimeCorrect = () => 
-        this.dailyWages.filter(({ wage }) => wage > 0).every(({ wage }) => wage === 160 || wage === 80);
-
-    // f. Check if there is any Part Time Wage (80)
-    hasPartTimeWage = () => 
-        this.dailyWages.some(({ wage }) => wage === 80);
-
-    // g. Find the number of days the employee worked
-    getDaysWorked = () => 
-        this.dailyWages.filter(({ hours }) => hours > 0).length;
+    // Function to display employee details
+    getEmployeeDetails = () => ({
+        ID: this.id,
+        Name: this.name,
+        Salary: `$${this.salary}`,
+        Gender: this.gender,
+        StartDate: this.startDate.toDateString()
+    });
 }
 
 module.exports = EmployeeWage;
