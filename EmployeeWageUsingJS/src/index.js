@@ -1,4 +1,5 @@
-const EmployeeWage = require("./employeeWage"); // Import the class
+const EmployeeWage = require("./employeeWage");
 
 const employee = new EmployeeWage("Vidhi Jain");
-console.log(employee.getAttendance()); // Check employee attendance
+console.log(employee.getAttendance());
+console.log(employee.getDailyWage());
