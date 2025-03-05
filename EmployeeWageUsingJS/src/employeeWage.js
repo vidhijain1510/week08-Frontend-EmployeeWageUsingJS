@@ -3,14 +3,12 @@ class EmployeeWage {
         this.name = name;
         this.isPresent = Math.random() < 0.5 ? "Present" : "Absent";
         this.wagePerHour = 20;
-        this.workHours = this.getWorkHours(); // Get work hours based on attendance
+        this.workHours = this.isPresent === "Present" ? this.getWorkHours() : 0; // Get work hours only if present
         this.dailyWage = this.workHours * this.wagePerHour; // Calculate wage
     }
 
-    // Determine work hours using Math.random() and switch statement
+    // Function to determine work hours
     getWorkHours() {
-        if (this.isPresent === "Absent") return 0;
-
         let workType = Math.floor(Math.random() * 3); // 0, 1, or 2
 
         switch (workType) {
