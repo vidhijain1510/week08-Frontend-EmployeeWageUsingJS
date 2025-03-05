@@ -1,31 +1,55 @@
 class EmployeeWage {
-    constructor(name) {
+    constructor(name, totalDays = 20) {
         this.name = name;
-        this.isPresent = Math.random() < 0.5 ? "Present" : "Absent";
         this.wagePerHour = 20;
-        this.workHours = this.isPresent === "Present" ? this.getWorkHours() : 0; // Get work hours only if present
-        this.dailyWage = this.workHours * this.wagePerHour; // Calculate wage
+        this.totalDays = totalDays;
+        this.dailyWages = [];
+        this.generateWages();
     }
 
     // Function to determine work hours
-    getWorkHours() {
+    getWorkHours = () => {
         let workType = Math.floor(Math.random() * 3); // 0, 1, or 2
+        return workType === 0 ? 0 : workType === 1 ? 4 : 8;
+    };
 
-        switch (workType) {
-            case 0: return 0;  // No work
-            case 1: return 4;  // Part-time (4 hours)
-            case 2: return 8;  // Full-time (8 hours)
-            default: return 0;
+    // Function to generate daily wages
+    generateWages = () => {
+        for (let day = 1; day <= this.totalDays; day++) {
+            let hours = this.getWorkHours();
+            let wage = hours * this.wagePerHour;
+            this.dailyWages.push({ day, hours, wage });
         }
-    }
+    };
 
-    getAttendance() {
-        return `${this.name} is ${this.isPresent}`;
-    }
+    // a. Calculate Total Wage using reduce
+    getTotalWage = () => 
+        this.dailyWages.reduce((total, day) => total + day.wage, 0);
 
-    getDailyWage() {
-        return `${this.name}'s Daily Wage: $${this.dailyWage} (Hours Worked: ${this.workHours})`;
-    }
+    // b. Show the Day along with Daily Wage using map
+    getDailyWages = () => 
+    this.dailyWages.map(({ day, wage }) => `Day ${day}: $${wage}`);
+
+
+    // c. Show Days when Full time wage (160) was earned
+    getFullTimeDays = () => 
+        this.dailyWages.filter(({ wage }) => wage === 160).map(({ day }) => day);
+
+    // d. Find first occurrence of Full Time Wage (160)
+    getFirstFullTimeDay = () => 
+        this.dailyWages.find(({ wage }) => wage === 160)?.day || "None";
+
+    // e. Check if every full-time wage entry is truly full-time
+    isEveryFullTimeCorrect = () => 
+        this.dailyWages.filter(({ wage }) => wage > 0).every(({ wage }) => wage === 160 || wage === 80);
+
+    // f. Check if there is any Part Time Wage (80)
+    hasPartTimeWage = () => 
+        this.dailyWages.some(({ wage }) => wage === 80);
+
+    // g. Find the number of days the employee worked
+    getDaysWorked = () => 
+        this.dailyWages.filter(({ hours }) => hours > 0).length;
 }
 
 module.exports = EmployeeWage;
